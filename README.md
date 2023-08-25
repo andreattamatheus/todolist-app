@@ -133,11 +133,6 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-# the-todolist-app
-
-   ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
