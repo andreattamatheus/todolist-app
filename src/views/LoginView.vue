@@ -58,6 +58,7 @@
             type="email"
             id="email"
             name="email"
+            v-model="auth.email"
             placeholder="email@example.com"
           />
         </div>
@@ -73,11 +74,13 @@
             type="password"
             id="password"
             name="password"
+            v-model="auth.password"
           />
         </div>
         <div class="mt-8">
           <button
             class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
+            @click="login"
           >
             Login
           </button>
@@ -92,27 +95,47 @@
       </div>
     </div>
     <p>
-      {{ info }}
+      {{ validationErrors }}
     </p>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import { mapActions } from 'vuex'
 
 export default {
   name: "LoginView",
   data() {
     return {
-      info: null,
+      auth: {
+        email: "",
+        password: "",
+      },
+      validationErrors:{},
+      loading:false
     };
   },
-  // mounted() {
-  //   axios
-  //     .get("https://api.coindesk.com/v1/bpi/currentprice.json")
-  //     .then((response) => (this.info = response));
-  // },
-  methods: {},
+  mounted() {},
+  methods: {
+    async login(event) {
+      await axios.post("http://localhost:8002/api/v1/login", this.auth)
+        .then(({ data }) => {
+          this.signIn();
+        })
+        .catch((error) => {
+          if (response.status === 422) {
+            this.validationErrors = response.data.errors;
+          } else {
+            this.validationErrors = {};
+            alert(response.data.message);
+          }
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+  },
 };
 </script>
 
