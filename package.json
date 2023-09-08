@@ -14,7 +14,8 @@
     "node-sass": "^9.0.0",
     "sass-loader": "^13.3.2",
     "tw-elements": "^1.0.0-beta3",
-    "vue": "^3.2.13",
+    "vue": "^3.2.36",
+    "vue-loader": "^17.2.2",
     "vue-router": "^4.0.3",
     "vuex": "^4.0.0"
   },
@@ -25,6 +26,7 @@
     "@vue/cli-plugin-vuex": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "autoprefixer": "^10.4.14",
+    "jest": "^29.6.4",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3"
   },
