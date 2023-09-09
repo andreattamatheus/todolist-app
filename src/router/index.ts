@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import TodoListView from '../views/TodoListView';
-import LoginView from '../views/LoginView'
-import RegisterView from '../views/RegisterView'
+import TodoListView from '../views/TodoListView.vue';
+import LoginView from '../views/LoginView.vue';
+import RegisterView from '../views/RegisterView.vue';
 
 const routes = [
   {

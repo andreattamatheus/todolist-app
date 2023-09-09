@@ -101,8 +101,6 @@
 </template>
 
 <script>
-import axios from "axios";
-import { mapActions } from 'vuex'
 
 export default {
   name: "LoginView",
@@ -119,17 +117,13 @@ export default {
   mounted() {},
   methods: {
     async login(event) {
-      await axios.post("http://localhost:8002/api/v1/login", this.auth)
+      await this.$axios.post("api/v1/login", this.auth)
         .then(({ data }) => {
           this.signIn();
         })
         .catch((error) => {
-          if (response.status === 422) {
-            this.validationErrors = response.data.errors;
-          } else {
-            this.validationErrors = {};
-            alert(response.data.message);
-          }
+          this.validationErrors = error.response;
+   
         })
         .finally(() => {
           this.loading = false;
