@@ -1,9 +1,24 @@
 <template>
   <div>
+    <header-menu v-if="userLogged"/>
     <router-view/>
   </div>
 </template>
 
+<script>
+import TheHeaderMenu from './components/TheHeaderMenu.vue';
+export default {
+  components: {
+    TheHeaderMenu,
+  },
+  computed: {
+    userLogged() {
+      return this.$cookies.get("_token");
+    },
+  },
+};
+
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
