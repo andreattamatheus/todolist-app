@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import TodoListView from "../views/Home/Index.vue";
 import LoginView from "../views/Auth/Index.vue";
 import RegisterView from "../views/Register/Index.vue";
-import Vue from 'vue';
+import store from "../store"; // Import the Vuex store
 
 const routes = [
   // {
@@ -12,7 +12,7 @@ const routes = [
   //   component: error404,
   // },
   {
-    path: "/",
+    path: "/login",
     name: "login",
     component: LoginView,
   },
@@ -37,25 +37,28 @@ const router = createRouter({
 });
 
 const isUserLoggedIn = () => {
-  const token = '';
-  if (token) return true;
+  let storedData = window.localStorage.getItem("logged-user");
+  // const parsedData = JSON.parse(storedData)
+  if (storedData !== null) {
+    const userLoggedIn = JSON.parse(storedData).user;
+    return userLoggedIn.isAuthenticated
+  }
   return false;
-}
+};
 
 router.beforeEach((to, from, next) => {
-  console.log('vai cair no middleware')
-  console.log(isUserLoggedIn());
-  if (to.meta.requiresAuth) {
+  if (to.path === "/login" && isUserLoggedIn()) {
+    next("/home")
+  }
+
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isUserLoggedIn()) {
       next();
     } else {
-      next('/');
+      next("/login"); // Redirect to the login page if not authenticated
     }
   } else {
-    if (from.path === '/' && isUserLoggedIn()) {
-      next('/home');
-    }
-    next(); 
+    next();
   }
 });
 
