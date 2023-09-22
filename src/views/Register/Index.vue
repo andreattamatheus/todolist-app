@@ -55,13 +55,14 @@
       <button
         class="bg-gray-700 text-white font-bold py-2 px-4 w-full rounded hover:bg-gray-600"
         type="submit"
+        @click="register"
       >
         Register
       </button>
     </form>
     <div class="mt-4 flex items-center justify-between">
       <span class="w-1/5 md:w-1/4"></span>
-      <router-link to="/" class="text-xs text-gray-500 uppercase"
+      <router-link to="/login" class="text-xs text-gray-500 uppercase"
         >or sign in</router-link
       >
       <span class="w-1/5 md:w-1/4"></span>
@@ -70,8 +71,50 @@
 </template>
 
 <script>
+import Loader from '@/components/Loader.vue';
+
 export default {
   name: "RegisterView",
+  components: {
+    Loader,
+  },
+  data() {
+    return {
+      form: {
+        name: "",
+        email: "",
+        password: "",
+        confirm_password: "",
+      },
+      validationErrors: {},
+      loading: false,
+    };
+  },
+  methods: {
+    async register() {
+      this.loading = true;
+      await this.$axios
+        .post("api/v1/register", {
+          'name': this.form.name,
+          'email': this.form.email,
+          'password': this.form.password
+        })
+        .then(() => {
+          this.registerUser();
+        })
+        .catch((error) => {
+          this.validationErrors = error.response;
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    registerUser() {
+      console.log('email com credenciais enviado');
+      console.log('registerUser');
+      this.$router.push({ name: "home" });
+    },
+  },
 };
 </script>
 

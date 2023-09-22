@@ -117,7 +117,6 @@ export default {
       loading: false,
     };
   },
-  mounted() {},
   methods: {
     async login(event) {
       this.loading = true;
@@ -134,7 +133,7 @@ export default {
         });
     },
     signIn(data) {
-      this.$store.dispatch('user/login')
+      this.$store.dispatch('user/login', data)
       this.$cookies.set(
         "_token",
         `${data.token_type} ${data.access_token}`,

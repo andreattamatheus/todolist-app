@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import TodoListView from "../views/Home/Index.vue";
-import LoginView from "../views/Auth/Index.vue";
+import LoginView from "../views/Login/Index.vue";
 import RegisterView from "../views/Register/Index.vue";
 import store from "../store"; // Import the Vuex store
 
@@ -50,7 +50,6 @@ router.beforeEach((to, from, next) => {
   if (to.path === "/login" && isUserLoggedIn()) {
     next("/home")
   }
-
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     if (isUserLoggedIn()) {
       next();

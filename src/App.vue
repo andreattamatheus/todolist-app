@@ -1,23 +1,22 @@
 <template>
   <div>
-    <header-menu v-if="userLogged"/>
-    <router-view/>
+    <the-header-menu v-if="userLogged" />
+    <router-view />
   </div>
 </template>
 
 <script>
-import TheHeaderMenu from './components/TheHeaderMenu.vue';
+import TheHeaderMenu from "./components/TheHeaderMenu.vue";
 export default {
   components: {
     TheHeaderMenu,
   },
   computed: {
     userLogged() {
-      return this.$cookies.get("_token");
+      return this.$store.getters['user/isAuthenticated'];
     },
   },
 };
-
 </script>
 <style>
 #app {
