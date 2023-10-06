@@ -12,7 +12,7 @@ const routes = [
   //   component: error404,
   // },
   {
-    path: "/login",
+    path: "/",
     name: "login",
     component: LoginView,
   },
