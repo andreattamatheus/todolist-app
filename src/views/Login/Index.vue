@@ -58,10 +58,12 @@
             type="email"
             id="email"
             name="email"
-            v-model="auth.email"
+            v-model="form.email"
             placeholder="email@example.com"
           />
+          <span v-if="this.validationErrors.email">{{ this.validationErrors.email }}</span>
         </div>
+
         <div class="mt-4">
           <div class="flex justify-between">
             <label class="block text-gray-700 text-sm font-bold mb-2"
@@ -74,8 +76,9 @@
             type="password"
             id="password"
             name="password"
-            v-model="auth.password"
+            v-model="form.password"
           />
+          <span v-if="this.validationErrors.password">{{ this.validationErrors.password }}</span>
         </div>
         <div class="mt-8">
           <button
@@ -96,37 +99,56 @@
         </div>
       </div>
     </div>
+    <notification-pop-up v-if="showNotification"/>
   </div>
 </template>
 
 <script>
 import Loader from '@/components/Loader.vue';
+import NotificationPopUp from '@/components/notifications/NotificationPopUp.vue';
 
 export default {
   name: "LoginView",
   components: {
     Loader,
+    NotificationPopUp,
   },
   data() {
     return {
-      auth: {
+      form: {
         email: "",
         password: "",
       },
       validationErrors: {},
       loading: false,
+      message: '',
+      showNotification: false,
     };
+  },
+  mounted() {
+    if (this.$route.query.message) {
+      this.showNotification = true;
+    }
+
+    setTimeout(() => {
+        this.showNotification = false;
+    }, 5000);
   },
   methods: {
     async login(event) {
       this.loading = true;
       await this.$axios
-        .post("api/v1/login", this.auth)
+        .post("api/v1/login", this.form)
         .then(({ data }) => {
+          this.validationErrors = {};
           this.signIn(data);
         })
         .catch((error) => {
-          this.validationErrors = error.response;
+          let errorFormatted = error.response.data.errors;
+          this.validationErrors = {
+            'email': errorFormatted.email?.[0], 
+            'password': errorFormatted.password?.[0], 
+          };
         })
         .finally(() => {
           this.loading = false;
@@ -143,6 +165,8 @@ export default {
       this.$router.push({ name: "home" });
     },
   },
+
+
 };
 </script>
 

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import TodoListView from "../views/Home/Index.vue";
 import LoginView from "../views/Login/Index.vue";
+import ErrorView from "../views/Error/Index.vue";
 import RegisterView from "../views/Register/Index.vue";
 import store from "../store"; // Import the Vuex store
 
@@ -28,7 +29,12 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-  },
+  },  
+  {
+    path: "/:pathMatch(.*)*",  // This will catch all routes not previously defined
+    name: "error",
+    component: ErrorView,
+  }
 ];
 
 const router = createRouter({
@@ -54,7 +60,7 @@ router.beforeEach((to, from, next) => {
     if (isUserLoggedIn()) {
       next();
     } else {
-      next("/login"); // Redirect to the login page if not authenticated
+      next("/"); // Redirect to the login page if not authenticated
     }
   } else {
     next();
