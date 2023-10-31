@@ -61,7 +61,7 @@
             v-model="form.email"
             placeholder="email@example.com"
           />
-          <span v-if="this.validationErrors.email">{{ this.validationErrors.email }}</span>
+          <span class="text-red-500" v-if="this.validationErrors.email">{{ this.validationErrors.email }}</span>
         </div>
 
         <div class="mt-4">
@@ -78,7 +78,7 @@
             name="password"
             v-model="form.password"
           />
-          <span v-if="this.validationErrors.password">{{ this.validationErrors.password }}</span>
+          <span class="text-red-500" v-if="this.validationErrors.password">{{ this.validationErrors.password }}</span>
         </div>
         <div class="mt-8">
           <button
@@ -106,9 +106,11 @@
 <script>
 import Loader from '@/components/Loader.vue';
 import NotificationPopUp from '@/components/notifications/NotificationPopUp.vue';
+import ValidationForm from '@/mixins/ValidationForm';
 
 export default {
   name: "LoginView",
+  mixins: [ValidationForm],
   components: {
     Loader,
     NotificationPopUp,
@@ -134,26 +136,32 @@ export default {
         this.showNotification = false;
     }, 5000);
   },
+
   methods: {
     async login(event) {
       this.loading = true;
-      await this.$axios
-        .post("api/v1/login", this.form)
-        .then(({ data }) => {
-          this.validationErrors = {};
-          this.signIn(data);
-        })
-        .catch((error) => {
-          let errorFormatted = error.response.data.errors;
-          this.validationErrors = {
-            'email': errorFormatted.email?.[0], 
-            'password': errorFormatted.password?.[0], 
-          };
-        })
-        .finally(() => {
-          this.loading = false;
-        });
+      console.log(this.form)
+      if (this.validateForm()) {
+        await this.$axios
+          .post("api/v1/login", this.form)
+          .then(({ data }) => {
+            console.log('deu bom')
+            this.validationErrors = {};
+            this.signIn(data);
+          })
+          .catch((error) => {
+            console.log(error)
+            console.log('deu ruim')
+            console.log(this.form)
+            if (error.response && error.response.data.errors) {
+              this.validationErrors = this.convertErrorFromArray(error);
+            }
+          })
+      }
+      this.loading = false;
+      return;
     },
+    
     signIn(data) {
       this.$store.dispatch('user/login', data)
       this.$cookies.set(

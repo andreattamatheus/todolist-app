@@ -61,6 +61,8 @@
 </template>
 
 <script>
+import axios from '@/plugins/axios';
+
 export default {
   name: "TodoListView",
   data() {
@@ -87,6 +89,9 @@ export default {
         ],
         };
   },
+  mounted() {
+    this.getUserTodos();
+  },
   methods: {
     setTodoToComplete(id) {
       this.todoList.filter((todo) => {
@@ -106,6 +111,20 @@ export default {
     {
         this.todoList.push(this.newTodo)
         this.newTodo = {title: ''}
+    },
+
+    async getUserTodos()
+    {
+      console.log('entrou no getUserTodos')
+      await this.$axios
+        .get("api/v1/todos")
+        .then(({ data }) => {
+          this.todoList = data;
+          this.signIn(data);
+        })
+        .catch((error) => {
+          alert(error);
+        })
     }
   },
 };
