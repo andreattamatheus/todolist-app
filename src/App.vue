@@ -13,13 +13,7 @@ export default {
   },
   computed: {
     userLogged() {
-      let storedData = window.localStorage.getItem("logged-user");
-      // const parsedData = JSON.parse(storedData)
-      if (storedData !== null) {
-        const userLoggedIn = JSON.parse(storedData).user;
-        return userLoggedIn.isAuthenticated
-      }
-      return false;
+      return this.$store.state.user.isAuthenticated
     },
   },
 };

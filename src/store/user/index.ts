@@ -17,6 +17,7 @@ export default {
     CLEAR_USER(state: any) {
       state.name = '';
       state.email = '';
+      state.accessToken = '';
     },
     SET_TOKEN(state: any, token: any) {
       state.accessToken = token;
@@ -35,7 +36,6 @@ export default {
     logout({ commit }: any) {
       commit('SET_AUTH', false);
       commit('CLEAR_USER');
-      commit('SET_TOKEN', '');
     },
   },
   getters: {
