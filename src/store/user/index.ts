@@ -4,6 +4,7 @@ export default {
     name: '',
     email: '',
     isAuthenticated: false,
+    accessToken: ''
   }),
   mutations: {
     STORE_USER(state: any, userData: any) {
@@ -16,28 +17,29 @@ export default {
     CLEAR_USER(state: any) {
       state.name = '';
       state.email = '';
+    },
+    SET_TOKEN(state: any, token: any) {
+      state.accessToken = token;
     }
   },
   actions: {
     login({ commit }: any, userData: any) {
-      // Implement your API login logic here
-      // After successful login, commit mutations to update state
       commit('SET_AUTH', true);
       commit('STORE_USER', {
         name: userData.name,
         email: userData.email
       });
-      // You can also commit user data if needed
-      // commit('SET_USER', userData);
+      commit('SET_TOKEN', userData.access_token);
     },
+
     logout({ commit }: any) {
-      // Implement your logout logic here (e.g., clearing tokens)
-      // After logout, commit mutations to update state
       commit('SET_AUTH', false);
       commit('CLEAR_USER');
+      commit('SET_TOKEN', '');
     },
   },
   getters: {
+    accessToken: (state: any) => state.accessToken,
     isAuthenticated: (state: any) => state.isAuthenticated,
     name: (state: any) => state.name,
     email: (state: any) => state.email,

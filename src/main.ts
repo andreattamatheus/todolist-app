@@ -6,6 +6,7 @@ import axios from './plugins/axios'
 import VueCookies from 'vue-cookies';
 
 import "@/assets/css/tailwind.css";
+import 'vue-loading-overlay/dist/css/index.css';
 
 const app = createApp(App)
 

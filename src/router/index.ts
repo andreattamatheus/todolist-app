@@ -3,24 +3,23 @@ import TodoListView from "../views/Home/Index.vue";
 import LoginView from "../views/Login/Index.vue";
 import ErrorView from "../views/Error/Index.vue";
 import RegisterView from "../views/Register/Index.vue";
-import store from "../store"; // Import the Vuex store
 
 const routes = [
-  // {
-  //   path: '*',
-  //   name: 'erorr',
-  //   secure: false,
-  //   component: error404,
-  // },
   {
     path: "/",
     name: "login",
     component: LoginView,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     path: "/register",
     name: "register",
     component: RegisterView,
+    meta: {
+      requiresAuth: false,
+    },
   },
   {
     path: "/home",
@@ -31,7 +30,7 @@ const routes = [
     },
   },  
   {
-    path: "/:pathMatch(.*)*",  // This will catch all routes not previously defined
+    path: "/:pathMatch(.*)*", 
     name: "error",
     component: ErrorView,
   }
@@ -53,17 +52,18 @@ const isUserLoggedIn = () => {
 };
 
 router.beforeEach((to, from, next) => {
-  if (to.path === "/login" && isUserLoggedIn()) {
-    next("/home")
-  }
-  if (to.matched.some((record) => record.meta.requiresAuth)) {
-    if (isUserLoggedIn()) {
-      next();
+  if (isUserLoggedIn()) {
+    if (to.path === "/" || to.path === "/register") {
+      next("/home")
     } else {
-      next("/"); // Redirect to the login page if not authenticated
+      next();
     }
   } else {
-    next();
+    if (to.matched.some((record) => record.meta.requiresAuth)) {
+      next("/");
+    } else {
+      next();
+    }
   }
 });
 

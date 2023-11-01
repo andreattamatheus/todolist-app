@@ -140,19 +140,14 @@ export default {
   methods: {
     async login(event) {
       this.loading = true;
-      console.log(this.form)
       if (this.validateForm()) {
         await this.$axios
           .post("api/v1/login", this.form)
           .then(({ data }) => {
-            console.log('deu bom')
             this.validationErrors = {};
             this.signIn(data);
           })
           .catch((error) => {
-            console.log(error)
-            console.log('deu ruim')
-            console.log(this.form)
             if (error.response && error.response.data.errors) {
               this.validationErrors = this.convertErrorFromArray(error);
             }
@@ -164,12 +159,6 @@ export default {
     
     signIn(data) {
       this.$store.dispatch('user/login', data)
-      this.$cookies.set(
-        "_token",
-        `${data.token_type} ${data.access_token}`,
-        "1d"
-      );
-      console.log('sigIn');
       this.$router.push({ name: "home" });
     },
   },
