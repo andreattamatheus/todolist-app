@@ -66,15 +66,44 @@ export default {
         }
       });
     },
-    removeToDo(id) {
-      const todo = this.todoList.findIndex((todo) => todo.id === id);
-      if (todo > -1) {
-        this.todoList.splice(todo, 1);
-      }
+    async removeToDo(todoId) {
+      this.isLoading = true;
+
+      await this.$axios.delete(`api/v1/todos/${todoId}`, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`
+        }
+      }).then(response => {
+        if (response.status === 204) {
+          const todo = this.todoList.findIndex((todo) => todo.id === todoId);
+          if (todo > -1) {
+            this.todoList.splice(todo, 1);
+          }
+        }
+      }).catch(error => {
+        console.error("An error occurred:", error);
+      
+      })
+
+      this.isLoading = false;
     },
-    createToDo() {
-      this.todoList.push(this.newTodo)
-      this.newTodo = { title: '' }
+    async createToDo() {
+      this.isLoading = true;
+      await this.$axios.post('api/v1/todos', this.newTodo, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`
+        }
+      }).then(response =>{
+        let todoCreated = {
+          id: response.data.id,
+          title: response.data.title,
+          isComplete: false
+        }
+        this.todoList.unshift(todoCreated)
+      }).catch(error => {
+        console.error("An error occurred:", error);
+      })
+      this.isLoading = false;
     },
 
     async getUserTodos() {
