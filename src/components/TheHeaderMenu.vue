@@ -12,7 +12,7 @@
           class="self-center text-xl font-semibold whitespace-nowrap dark:text-black"
         >
           <div class="flex items-center lg:order-2">
-            <a href="https://flowbite.com" class="flex items-center">
+            <a href="#" @click="redirectToHome" class="flex items-center">
               <img
                 src="https://www.svgrepo.com/show/503110/todo.svg"
                 class="mr-3 h-6 sm:h-9"
@@ -128,6 +128,9 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
+    redirectToHome(){
+      this.$router.push({ name: "home"})
+    }
   },
   computed: {
     nameUserLoggedIn() {

@@ -3,6 +3,7 @@ import TodoListView from "../views/Home/Index.vue";
 import LoginView from "../views/Login/Index.vue";
 import ErrorView from "../views/Error/Index.vue";
 import RegisterView from "../views/Register/Index.vue";
+import UserView from "../views/User/Index.vue";
 
 const routes = [
   {
@@ -25,6 +26,14 @@ const routes = [
     path: "/home",
     name: "home",
     component: TodoListView,
+    meta: {
+      requiresAuth: true,
+    },
+  },  
+  {
+    path: "/user/view",
+    name: "user-view",
+    component: UserView,
     meta: {
       requiresAuth: true,
     },

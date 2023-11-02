@@ -39,4 +39,9 @@ nav a {
 nav a.router-link-exact-active {
   color: #42b983;
 }
+
+.bg-background-primary {
+  background-color: rgba(248, 248, 248, 0.329);
+}
+
 </style>

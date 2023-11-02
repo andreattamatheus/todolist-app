@@ -1,9 +1,9 @@
 <template>
-  <div class="h-100 w-full flex items-center justify-center bg-teal-lightest font-sans vl-parent" ref="formContainer">
+  <div class="h-100 w-full flex items-center justify-center bg-background-primary font-sans vl-parent" ref="formContainer">
     <loading v-model:active="isLoading" :is-full-page="fullPage" />
     <div class="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
       <div class="mb-4">
-        <h1 class="text-grey-darkest">Todo List</h1>
+        <h1 class="text-grey-darkest text-xl font-bold">Mainbox</h1>
         <div class="flex mt-4">
           <input class="shadow appearance-none border rounded w-full py-2 px-3 mr-4 text-grey-darker"
             placeholder="Add Todo" v-model="newTodo.title" />
