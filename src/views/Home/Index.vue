@@ -1,5 +1,6 @@
 <template>
-  <div class="h-100 w-full flex items-center justify-center bg-background-primary font-sans vl-parent" ref="formContainer">
+  <div class="h-100 w-full flex items-center justify-center bg-background-primary font-sans vl-parent"
+    ref="formContainer">
     <loading v-model:active="isLoading" :is-full-page="fullPage" />
     <div class="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
       <div class="mb-4">
@@ -15,9 +16,9 @@
       </div>
       <div>
         <div v-for="todo in todoList" :key="todo.id" class="flex mb-4 items-center">
-          <p :class="todo.isComplete ? 'line-through text-green' : ''" class="w-full text-grey-darkest">
-            {{ todo.title }}
-          </p>
+          <input @keyup.enter="updateToDo(todo)" v-model="todo.title"
+            :class="todo.isComplete ? 'line-through text-green' : ''" class="w-full text-grey-darkest p-2" />
+
           <button v-if="todo.isComplete" @click="setTodoToComplete(todo.id)"
             class="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">
             Not Done
@@ -48,7 +49,7 @@ export default {
     return {
       isLoading: false,
       fullPage: false,
-      accessToken : this.$store.state.user.accessToken,
+      accessToken: this.$store.state.user.accessToken,
       newTodo: {
         title: ''
       },
@@ -82,7 +83,7 @@ export default {
         }
       }).catch(error => {
         console.error("An error occurred:", error);
-      
+
       })
 
       this.isLoading = false;
@@ -93,7 +94,7 @@ export default {
         headers: {
           'Authorization': `Bearer ${this.accessToken}`
         }
-      }).then(response =>{
+      }).then(response => {
         let todoCreated = {
           id: response.data.id,
           title: response.data.title,
@@ -105,21 +106,45 @@ export default {
       })
       this.isLoading = false;
     },
+    async updateToDo(todoToUpdate) {
+      this.isLoading = true;
+      try {
+        const response = await this.$axios.put('api/v1/todos',
+          {
+            'todoId': todoToUpdate.id,
+            'title': todoToUpdate.title,
+          },
+          {
+            headers: {
+              'Authorization': `Bearer ${this.accessToken}`
+            }
+          })
+        if (response.status === 204) {
+          const index = this.todoList.findIndex((todo) => todo.id === todoToUpdate.id);
+          if (index > -1) {
+            this.todoList[index].title = todoToUpdate.title;
+          }
+        }
+      } catch (error) {
+        console.error("An error occurred:", error);
+      }
+      this.isLoading = false;
+    },
 
     async getUserTodos() {
       this.isLoading = true;
       try {
         await this.$axios.get("api/v1/todos", {
-            headers: {
-                'Authorization': `Bearer ${this.accessToken}`
-            }
+          headers: {
+            'Authorization': `Bearer ${this.accessToken}`
+          }
         })
-        .then(response => {
+          .then(response => {
             this.todoList = response.data;
-        })
-        .catch(error => {
+          })
+          .catch(error => {
             console.error("An error occurred:", error);
-        });
+          });
       } catch (error) {
         console.error("An error occurred:", error);
       }

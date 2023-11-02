@@ -129,6 +129,7 @@ export default {
       this.showMenu = false;
     },
     redirectToHome(){
+      this.showMenu = !this.showMenu;
       this.$router.push({ name: "home"})
     }
   },
