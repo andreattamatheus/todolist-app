@@ -44,4 +44,8 @@ nav a.router-link-exact-active {
   background-color: rgba(248, 248, 248, 0.329);
 }
 
+.bg-background-secondary {
+  background-color: #2E2E2E;
+}
+
 </style>

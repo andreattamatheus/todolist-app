@@ -3,26 +3,27 @@
 
 <template>
   <header>
-    <nav class="bg-white border-gray-800 px-4 lg:px-6 py-2.5 dark:bg-white-400">
+    <nav class="bg-background-secondary border-gray-800 px-4 lg:px-6 py-0">
       <div
         class="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl"
       >
         <div
           v-if="userIsAuthenticated"
-          class="self-center text-xl font-semibold whitespace-nowrap dark:text-black"
+          class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
         >
           <div class="flex items-center lg:order-2">
-            <a href="#" @click="redirectToHome" class="flex items-center">
+
+            <router-link to="/home" href="#" class="flex items-center">
               <img
                 src="https://www.svgrepo.com/show/503110/todo.svg"
                 class="mr-3 h-6 sm:h-9"
                 alt="Flowbite Logo"
               />
               <span
-                class="self-center text-xl font-semibold whitespace-nowrap dark:text-black"
+                class="self-center text-xl font-semibold whitespace-nowrap dark:text-white"
                 >ToDoApp</span
               >
-            </a>
+            </router-link>
           </div>
           <!-- component -->
         </div>
@@ -128,10 +129,6 @@ export default {
     closeMenu() {
       this.showMenu = false;
     },
-    redirectToHome(){
-      this.showMenu = !this.showMenu;
-      this.$router.push({ name: "home"})
-    }
   },
   computed: {
     nameUserLoggedIn() {
