@@ -1,10 +1,9 @@
 <template>
   <div class="flex">
-    <side-menu/>
-    <div class="w-full flex items-start justify-left bg-background-primary font-sans vl-parent"
-      ref="formContainer">
+    <side-menu />
+    <div class="w-full flex items-start justify-left bg-background-primary font-sans vl-parent" ref="formContainer">
       <loading v-model:active="isLoading" :is-full-page="fullPage" />
-      <div class="bg-white rounded shadow p-6 m-4 w-full lg:w-3/4 lg:max-w-lg">
+      <div class="bg-white rounded shadow p-6 m-4 w-full lg:w-2/4 ">
         <div class="mb-4">
           <h1 class="text-grey-darkest text-xl font-bold">Mainbox</h1>
           <div class="flex mt-4">
@@ -20,7 +19,7 @@
           <div v-for="todo in todoList" :key="todo.id" class="flex mb-4 items-center">
             <input @keyup.enter="updateToDo(todo)" v-model="todo.title"
               :class="todo.isComplete ? 'line-through text-green' : ''" class="w-full text-grey-darkest p-2" />
-  
+
             <button v-if="todo.isComplete" @click="setTodoToComplete(todo.id)"
               class="flex-no-shrink p-2 ml-4 mr-2 border-2 rounded hover:text-white text-grey border-grey hover:bg-grey">
               Not Done
@@ -38,12 +37,12 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
 import Loading from 'vue-loading-overlay';
 import SideMenu from '@/components/TheSideMenuBar.vue';
+import HandleUserData from '@/mixins/HandleUserData';
 
 export default {
   name: "TodoListView",
@@ -51,6 +50,7 @@ export default {
     Loading,
     SideMenu
   },
+  mixins: [HandleUserData],
   data() {
     return {
       isLoading: false,
@@ -73,27 +73,7 @@ export default {
         }
       });
     },
-    async removeToDo(todoId) {
-      this.isLoading = true;
 
-      await this.$axios.delete(`api/v1/todos/${todoId}`, {
-        headers: {
-          'Authorization': `Bearer ${this.accessToken}`
-        }
-      }).then(response => {
-        if (response.status === 204) {
-          const todo = this.todoList.findIndex((todo) => todo.id === todoId);
-          if (todo > -1) {
-            this.todoList.splice(todo, 1);
-          }
-        }
-      }).catch(error => {
-        console.error("An error occurred:", error);
-
-      })
-
-      this.isLoading = false;
-    },
     async createToDo() {
       this.isLoading = true;
       await this.$axios.post('api/v1/todos', this.newTodo, {
@@ -101,17 +81,22 @@ export default {
           'Authorization': `Bearer ${this.accessToken}`
         }
       }).then(response => {
-        let todoCreated = {
-          id: response.data.id,
-          title: response.data.title,
-          isComplete: false
+        if (response.status === 202 && response.data.id) {
+          let todoCreated = {
+            id: response.data.id,
+            title: response.data.title,
+            isComplete: false
+          }
+          this.todoList.unshift(todoCreated)
+        } else {
+          this.getUserTodos();
         }
-        this.todoList.unshift(todoCreated)
       }).catch(error => {
         console.error("An error occurred:", error);
       })
       this.isLoading = false;
     },
+
     async updateToDo(todoToUpdate) {
       this.isLoading = true;
       try {
@@ -137,25 +122,28 @@ export default {
       this.isLoading = false;
     },
 
-    async getUserTodos() {
+    async removeToDo(todoId) {
       this.isLoading = true;
-      try {
-        await this.$axios.get("api/v1/todos", {
-          headers: {
-            'Authorization': `Bearer ${this.accessToken}`
+
+      await this.$axios.delete(`api/v1/todos/${todoId}`, {
+        headers: {
+          'Authorization': `Bearer ${this.accessToken}`
+        }
+      }).then(response => {
+        if (response.status === 204) {
+          const todo = this.todoList.findIndex((todo) => todo.id === todoId);
+          if (todo > -1) {
+            this.todoList.splice(todo, 1);
           }
-        })
-          .then(response => {
-            this.todoList = response.data;
-          })
-          .catch(error => {
-            console.error("An error occurred:", error);
-          });
-      } catch (error) {
+        }
+      }).catch(error => {
         console.error("An error occurred:", error);
-      }
+
+      })
+
       this.isLoading = false;
-    }
+    },
+
   },
 };
 </script>
