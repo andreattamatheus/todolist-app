@@ -29,7 +29,7 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-  },  
+  },
   {
     path: "/user/view",
     name: "user-view",
@@ -37,12 +37,12 @@ const routes = [
     meta: {
       requiresAuth: true,
     },
-  },  
+  },
   {
-    path: "/:pathMatch(.*)*", 
+    path: "/:pathMatch(.*)*",
     name: "error",
     component: ErrorView,
-  }
+  },
 ];
 
 const router = createRouter({
@@ -55,7 +55,7 @@ const isUserLoggedIn = () => {
   // const parsedData = JSON.parse(storedData)
   if (storedData !== null) {
     const userLoggedIn = JSON.parse(storedData).user;
-    return userLoggedIn.isAuthenticated
+    return userLoggedIn.isAuthenticated;
   }
   return false;
 };
@@ -63,7 +63,7 @@ const isUserLoggedIn = () => {
 router.beforeEach((to, from, next) => {
   if (isUserLoggedIn()) {
     if (to.path === "/" || to.path === "/register") {
-      next("/home")
+      next("/home");
     } else {
       next();
     }

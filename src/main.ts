@@ -1,17 +1,21 @@
-import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import axios from './plugins/axios'
-import VueCookies from 'vue-cookies';
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
+import axios from "./plugins/axios";
+import VueCookies from "vue-cookies";
 
 import "@/assets/css/tailwind.css";
-import 'vue-loading-overlay/dist/css/index.css';
+import "vue-loading-overlay/dist/css/index.css";
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(store).use(router).use(router).use(axios, {
+app
+  .use(store)
+  .use(router)
+  .use(router)
+  .use(axios, {
     baseUrl: process.env.VUE_APP_URL,
-})
-.use(VueCookies)
-.mount('#app')
+  })
+  .use(VueCookies)
+  .mount("#app");
