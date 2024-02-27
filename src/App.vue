@@ -1,6 +1,5 @@
 <template>
   <div>
-    <the-header-menu v-if="userLogged" />
     <router-view />
   </div>
 </template>
@@ -47,5 +46,4 @@ nav a.router-link-exact-active {
 .bg-background-secondary {
   background-color: #2E2E2E;
 }
-
 </style>
